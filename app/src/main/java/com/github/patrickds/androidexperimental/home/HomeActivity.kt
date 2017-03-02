@@ -1,24 +1,44 @@
 package com.github.patrickds.androidexperimental.home
 
 import android.app.ProgressDialog
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.View
 import com.github.patrickds.androidexperimental.R
 import com.github.patrickds.androidexperimental.application.AndroidExperimentalApplication
 import com.github.patrickds.androidexperimental.application.showLongSnack
+import com.github.patrickds.androidexperimental.autoadapter.AutoAdapter
+import com.github.patrickds.androidexperimental.details.DetailsActivity
 import com.github.patrickds.androidexperimental.home.domain.model.RedditPost
 import com.github.patrickds.androidexperimental.home.injection.DaggerHomeComponent
 import com.github.patrickds.androidexperimental.home.injection.HomeModule
 import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.view_news_list_item.view.*
 import javax.inject.Inject
 
 class HomeActivity : AppCompatActivity(), HomeContract.View {
 
     val newsList: RecyclerView by lazy { news_list }
     val progressDialog by lazy { ProgressDialog(this) }
-    val adapter = RedditPostsAdapter(emptyList())
+
+    val adapter = AutoAdapter
+            .Builder<RedditPost>()
+            .layout(R.layout.view_news_list_item)
+            .clicks(R.id.post_vote_down)
+            .clicks(R.id.post_vote_up)
+            .clicks(R.id.post_list_item)
+            .itemBinder(RedditPostBinder())
+            .build()
+
+    class RedditPostBinder : AutoAdapter.IItemBinder<RedditPost> {
+        override fun bind(view: View, item: RedditPost) {
+            view.post_votes.text = item.votes.toString()
+            view.post_title.text = item.title
+        }
+    }
 
     @Inject
     lateinit var presenter: HomeContract.Presenter
@@ -56,15 +76,16 @@ class HomeActivity : AppCompatActivity(), HomeContract.View {
     }
 
     override fun updateItem(item: RedditPost) = adapter.updateItem(item)
-    override fun listItemClicks() = adapter.observeListItemClicks()
-    override fun voteUpClicks() = adapter.observeVoteUp()
-    override fun voteDownClicks() = adapter.observeVoteDown()
+    override fun listItemClicks() = adapter.clicks(R.id.post_list_item)
+    override fun voteUpClicks() = adapter.clicks(R.id.post_vote_up)
+    override fun voteDownClicks() = adapter.clicks(R.id.post_vote_down)
 
     override fun startDetailsActivity(post: RedditPost) {
+        startActivity(Intent(this, DetailsActivity::class.java).putExtra("title", post.title))
     }
 
     override fun showNews(news: List<RedditPost>) {
-        adapter.replaceData(news)
+        adapter.swapData(news)
     }
 
     override fun showLoading() {
