@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">AndroidExperimental</string>
+    <string name="post_image_content_description">Post image</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_hide">Hide</string>
+    <string name="btn_share">Share</string>
+    <string name="btn_vote_up_description">Vote up button</string>
+    <string name="btn_vote_down_description">Vote down button</string>
+</resources>
