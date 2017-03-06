@@ -34,7 +34,19 @@ captures/
 
 # Intellij
 *.iml
+/.idea
 .idea/workspace.xml
 
 # Keystore files
 *.jks
+
+*.iml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+/.sonar
+*.apk
