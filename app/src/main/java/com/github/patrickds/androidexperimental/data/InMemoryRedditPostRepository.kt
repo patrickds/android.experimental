@@ -2,13 +2,14 @@ package com.github.patrickds.androidexperimental.data
 
 import com.github.patrickds.androidexperimental.home.domain.model.RedditPost
 import com.github.patrickds.androidexperimental.home.domain.repositories.IRedditPostRepository
-import io.reactivex.Single
+import io.reactivex.Observable
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class InMemoryRedditPostRepository
 @Inject constructor() : IRedditPostRepository {
 
-    override fun getAll() = Single.create<List<RedditPost>> { emitter ->
+    override fun getAll() = Observable.create<List<RedditPost>> { emitter ->
 
         val news = listOf(
                 RedditPost("Title 1", "r/All", "Content 1", "Author 1", 200, 4),
@@ -22,7 +23,8 @@ class InMemoryRedditPostRepository
                 RedditPost("Title 9", "r/All", "Content 9", "Author 9", 300, 2)
         )
 
-        emitter.onSuccess(news)
+        emitter.onNext(news)
+        emitter.onComplete()
     }
-//            .delay(5, TimeUnit.SECONDS)
+            .delay(3, TimeUnit.SECONDS)
 }

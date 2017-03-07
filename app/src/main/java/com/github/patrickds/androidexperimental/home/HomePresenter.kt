@@ -1,6 +1,5 @@
 package com.github.patrickds.androidexperimental.home
 
-import com.github.patrickds.androidexperimental.home.domain.repositories.IRedditPostRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -9,7 +8,7 @@ import javax.inject.Inject
 class HomePresenter
 @Inject constructor(
         val view: HomeContract.View,
-        val newsRepository: IRedditPostRepository) :
+        val interactor: HomeInteractor) :
         HomeContract.Presenter {
 
     private val subscriptions = CompositeDisposable()
@@ -26,7 +25,7 @@ class HomePresenter
     }
 
     private fun loadNews() =
-            newsRepository.getAll()
+            interactor.loadNews()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe { view.showLoading() }

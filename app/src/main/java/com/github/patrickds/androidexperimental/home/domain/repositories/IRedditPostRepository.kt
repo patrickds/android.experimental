@@ -1,8 +1,8 @@
 package com.github.patrickds.androidexperimental.home.domain.repositories
 
 import com.github.patrickds.androidexperimental.home.domain.model.RedditPost
-import io.reactivex.Single
+import io.reactivex.Observable
 
 interface IRedditPostRepository {
-    fun getAll(): Single<List<RedditPost>>
+    fun getAll(): Observable<List<RedditPost>>
 }
